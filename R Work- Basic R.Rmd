@@ -1,0 +1,130 @@
+---
+title: "Homework Assignment 1"
+author: "Aksheytha Chelikavada"
+date: "January 16, 2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+You need to write code to answer each question. No credit for just searching through the dataset.
+
+1. Consider the dataset faithful. What is the mean waiting for the observations where the eruption is longer than 2 minutes.
+```{r}
+
+mean(faithful[faithful$eruptions > 2, 'waiting'])
+
+```
+
+2. Consider the dataset state.x77. 
+This dataset is actually a _______ so we will create a data_frame from it.
+```{r}
+## series of vectors that contain data
+state2<-as.data.frame(state.x77)
+str(state2)
+state2
+
+```
+
+a. What variables does state2 have in it and what are their types?
+b. What is the median income for the states?
+c. What is the mean income for the states?
+d. What is the range of  the lowest 25% of the incomes?
+e. Graph the histogram of incomes. Describe the shape of the histogram.
+```{r}
+## a.
+#var_state2 <- names(state2)
+#var_state2
+#typeof(var_state2)
+str(state2)
+
+## b.
+median(state2$Income)
+
+## c.
+mean(state2$Income)
+
+## d.
+
+q1=fivenum(state2$Income,na.rm=T)[2]
+range(state2$Income[state2$Income < q1])
+
+
+## e.
+
+incomes <- state2$Income
+hist(incomes)
+
+##From the histogram it seems that the shape seems to be bell shaped since 
+##it has one peak in the middle of the graph.
+
+
+
+
+
+```
+
+
+3. There are  other  variables for state: state.region, state.name, state.abb.
+a. What regions are there?
+b. What states are in the region west?
+c. What is the median HS graduation rate for the states that are in the south?
+d. What state in the west has the smallest life expectancy?
+e. Create a table with the number of states in each regions  with populations greater than 5000 K and the number in each region  whose population is not.
+```{r}
+## a.
+levels(state.region)
+
+## b.
+state.name[state.region == 'West']
+
+## c.
+median(state2$`HS Grad`[state.region == 'South'])
+
+## d.
+min(state2$`Life Exp`[state.region == 'West'])
+
+## e.
+
+table(state.region,state2$Population > 5000)
+
+
+```
+
+4.Plot discoveries.What do you observe? What might be an interesting plot to graph simultaneously?
+```{r}
+plot(discoveries)
+## I observe that the plot is telling me the number of inventions from 
+#the years 1860 to 1959. The frequency tells me the number of inventions per year.
+#For example, for 1860 there were 5 inventions, for 1861 there were 3 inventions, 
+#and so on. The plot seems to have spike in discoveries in the early 1880's.
+#An interesting plot to graph simultaneously would be uspop. 
+#We can see if there is any connection between the US population and the 
+#number of inventions in a time period.
+```
+
+
+
+5. a.Graph the boxplot of unicef totpop.You will need to include code to load the unicef dataset. Are there outliers? Ignoring the outliers, what do you observe? 
+b. What is the five number summary for totpop?
+```{r}
+## a.
+load("C:/Users/akshe/Desktop/unicefbas2016 (1).rda")
+boxplot(unicefb2016$totpop, xlab = c("totpop"))
+
+## I have noticed that there are outliers. 
+#One at 1.3 million and one at 1.4 million. Ignoring the outliers,
+#I have noticed that the total populations are quite low at about 7500. 
+
+## b.
+summary(unicefb2016$totpop)
+
+
+
+```
+
+
+Knit your file and submit it to Canvas as a pdf.
