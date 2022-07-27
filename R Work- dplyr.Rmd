@@ -1,0 +1,179 @@
+---
+title: "HW 6"
+author: "Aksheytha"
+date: "4/6/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Questions: 4,8,10,12,13,17,18,30,31
+
+Question 4)
+
+```{r}
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+library(dplyr)
+library(tidyverse)
+library(rlang)
+```
+
+
+```{r}
+library(HistData)
+DrinksWages
+```
+```{r}
+#Compute the mean wages for each class, A, B, and C.
+
+DrinksWages %>% filter(class == 'A') %>% summarize(mean(wage))
+DrinksWages %>% filter(class == 'B') %>% summarize(mean(wage))
+DrinksWages %>% filter(class == 'C') %>% summarize(mean(wage))
+
+#Find the three trades with the highest proportion of drinkers. Consider only trades with 10 or more workers in the survey.
+
+DrinksWages %>% filter(n >= 10) %>% arrange(desc(drinks)) %>%  head(n=3)
+```
+
+Question 8)
+```{r}
+
+
+install.packages("remotes", repos = "http://cran.us.r-project.org") 
+remotes::install_github(repo = "speegled/fosdata")
+
+movies <- fosdata::movies
+
+
+movies <- as_tibble(movies)
+movies
+
+
+```
+
+```{r}
+#highest mean rating
+
+movies %>% filter(genres == 'Comedy|Romance') %>% group_by(title) %>% 
+  summarize(meanRating = mean(rating), count = n()) %>% filter(count >= 50) %>%
+slice_max(meanRating)
+```
+
+```{r}
+#lowest mean rating
+movies %>% filter(genres == 'Comedy|Romance') %>% group_by(title) %>% summarize(meanRating = mean(rating), count = n()) %>% filter(count >= 50) %>%
+slice_min(meanRating)
+```
+
+Question 10)
+
+```{r}
+#Which user gave the highest mean ratings?
+
+
+movies %>% group_by(userId) %>% summarize(meanRating = mean(rating)) %>%
+slice_max(meanRating)
+
+```
+
+Question 12)
+```{r}
+#How many doubles were hit in 1871?
+
+install.packages("Lahman", repos = "http://cran.us.r-project.org")
+Batting <- Lahman::Batting
+Batting
+
+```
+
+
+
+```{r}
+Batting %>% filter(yearID == 1871) %>%  summarise( Freq = sum(X2B))
+```
+
+Question 13)
+
+```{r}
+#Which team has the most total number of home runs, all time?
+
+Batting %>%  group_by(teamID) %>%  summarise( Freq = sum(HR)) %>% slice_max(Freq)
+```
+Question 17)
+
+```{r}
+install.packages("Lahman", repos = "http://cran.us.r-project.org")
+Pitching <- Lahman::Pitching
+Pitching
+
+```
+
+
+
+```{r}
+
+#Which pitcher has won (W) the most number of games?
+
+Pitching %>%  arrange(desc(W)) %>%  head(n=1) %>%  select(playerID)
+
+```
+
+
+```{r}
+#Which pitcher has lost (L) the most number of games?
+
+Pitching %>%  arrange(desc(L)) %>%  head(n=1) %>%  select(playerID)
+```
+
+
+Question 18) 
+
+```{r}
+#Which pitcher has hit the most opponents with a pitch (HBP)?
+
+Pitching %>%  arrange(desc(HBP)) %>%  head(n=1) %>%  select(playerID)
+
+
+```
+Question 30)
+
+```{r}
+install.packages("babynames", repos = "http://cran.us.r-project.org")
+babynames <- babynames::babynames
+babynames
+```
+
+
+```{r}
+#Say that a name is popular if it was given to 1000 or more babies of a single sex. How many popular female names were there in 2015? What percentage of these popular female names ended in the letter ‘a?’
+
+
+babynames %>% filter(year == 2015) %>% filter(sex =='F') %>%  group_by(name) %>% filter(n >= 1000)
+#325 popular female names
+
+```
+
+```{r}
+babynames %>% filter(year == 2015) %>% filter(sex =='F') %>%  group_by(name) %>% filter(n >= 1000) %>% filter(name %>% endsWith("a"))
+
+120/325
+#37%
+```
+
+
+
+
+Question 31)
+
+```{r}
+#31
+
+#Consider the babynames data set. Restrict to babies born in 2003. We’ll consider a name to be gender neutral if the number of male babies given that name is within plus or minus 20% of the number of girl babies given that name. What were the 5 most popular gender neutral names in 2003?
+
+library("tidyverse")
+
+babynames %>%filter(year == '2003') %>% group_by(name,sex) %>% summarise(sex,n) %>% spread(sex,n) %>% filter(!is.na(F),!is.na(M)) %>% filter(M >= 0.8*F & M <= 1.2*F) %>% summarise(n=(M+F)) %>% arrange(desc(n)) %>% head(n=5)
+```
+
