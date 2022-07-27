@@ -1,6 +1,5 @@
 ---
-title: "HW 6"
-author: "Aksheytha"
+
 date: "4/6/2022"
 output: pdf_document
 ---
