@@ -1,7 +1,4 @@
 ---
-title: "Homework Assignment 1"
-author: "Aksheytha Chelikavada"
-date: "January 16, 2022"
 output:
   pdf_document: default
   html_document: default
