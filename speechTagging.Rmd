@@ -290,6 +290,7 @@ my_hmm2 <- initHMM(States = c(".", "ADJ", "ADP", "ADV", "CONJ", "DET", "NOUN", "
                   emissionProbs = changedBind)
 
 viterbi(my_hmm2, as.character(test$word[444:446]))
+
 ```
 
 
