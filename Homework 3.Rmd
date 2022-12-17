@@ -1,0 +1,93 @@
+---
+title: "Homework 3"
+author: "Aksheytha"
+date: "2022-09-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#2.2
+
+GenerateRandomWalk <- function(k = 1000,initial.value = 0) {
+  samples = rbinom(k,1,0.5)
+  samples[samples==0] = -1
+  initial.value + c(0, cumsum(samples))
+}
+
+
+
+y <- replicate(10000, GenerateRandomWalk())
+
+z <- c()
+
+for(i in 1:10000){
+  z[i] <- y[1001,i]
+}
+
+sum(z == 0)
+
+```
+
+
+```{r}
+#theoretical
+
+choose(1000,500)*.5^1000
+
+#Empirical
+sum(z == 0)/10000
+
+
+#They are pretty much the same. They differ slightly.
+```
+
+
+
+```{r}
+library(ggplot2)
+
+k <- c()
+
+Xt = 0; Yt = 0
+for (i in 2:10000)
+{
+  Xt[i] = Xt[i-1] + sample(c(-1, 1), 1, TRUE)
+  
+  Yt[i] = Yt[i-1] + sample(c(-1, 1), 1, TRUE)
+  if (Xt[i] == 3 || Xt[i] == -3  || Yt[i] == 3  || Yt[i] == -3 ){
+  
+    k <- append(k,c(Xt[i], Yt[i]))
+    break
+    
+  }
+}
+
+k
+
+```
+
+```{r}
+library(matlib)
+
+B <- c(30,30,30,30,30,30)
+A<- matrix(c(1,-1/3,0,-1/3,0,0,
+            -1/2,1,-1/2,0,0,0,
+            0,-1/3,1,-1/3,-1/3,0,
+            -1/2,0,-1/2,1,0,0,
+            0,0,-1/2,0,1,-1/2,
+            0,0,0,0,-1,1), nrow = 6, ncol = 6, byrow = T)
+
+Solve(A, B, fractions = T)
+
+#We will then do 390/30
+
+390/30
+
+#There are a total of 13 transitions. Which means that (30)(13) they wil spend 390 minutes. So, they
+#will be able to finish the visit before closing time.
+```
+
