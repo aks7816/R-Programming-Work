@@ -1,0 +1,145 @@
+---
+title: "HW 6"
+author: "Aksheytha"
+date: "2022-10-15"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#PART A 
+
+aa <- read.csv("C:\\Users\\akshe\\Downloads\\simulated_data_intensity.csv")
+
+table(aa$trial)
+
+final_table <- table(table(aa$trial))
+final_table
+
+
+
+histogram <- hist(final_table, probability = T)
+#Estimate for C is 4.6
+
+histogram$density
+
+total_goals <- sum(1:11 * final_table)
+total_goals/400
+
+expected_goals <- dpois(1:11, lambda = total_goals/400) * 400
+expected_goals
+
+sum((final_table - expected_goals)^2/expected_goals)
+
+pchisq(2.05, df = 11-1-1, lower.tail = F)
+
+#Since P value is greater than 0.05 we have to fail to reject 
+
+
+#PART B
+
+plot(stepfun(x = seq(0,3,length.out = 5), y = c(0, histogram$density *4.6,0)))
+
+
+
+```
+
+
+```{r}
+#PART C
+total_goals/400
+
+ss <- hist(aa$locations, probability = T)
+
+times <- ss$mids 
+mod <- lm(ss$density ~ times + I(times^2))
+summary(mod) 
+ff <- function(x) {
+  mod$coefficients[1] + mod$coefficients[2] * x + mod$coefficients[3] * x^2 
+} 
+curve(ff(x), add = T, col = 2)
+integrate(ff, lower = 0, upper = 3)
+intensity <- function(x) {
+  4.6 * ff(x)
+}
+integrate(intensity, lower = 0, upper =3)
+
+
+
+
+
+breaks <- seq(0, 3, length.out = 19)
+ss2 <- hist(aa$locations, breaks = breaks)
+observed_goals <- ss2$counts
+observed_goals
+
+integrate(ff, lower = 0.5, 5.5)$val
+expected_goals <- sapply(1:18, function(x) {
+  integrate(intensity, lower = breaks[x], upper = breaks[x + 1])$val
+}) * 400 
+expected_goals
+
+sum((observed_goals - expected_goals)^2/expected_goals)
+
+pchisq(34.43, df = 18 - 1 - 3, lower.tail = F)
+
+#Since P-Value is less than 0.05, we are going to reject
+
+```
+
+
+```{r}
+#PART D
+total_goals/400
+
+ss <- hist(aa$locations, probability = T)
+
+times <- ss$mids 
+mod <- lm(ss$density ~ times + I(times^2) + I(times^3))
+summary(mod) 
+ff <- function(x) {
+  mod$coefficients[1] + mod$coefficients[2] * x + mod$coefficients[3] * x^2 + mod$coefficients[4] * x^3
+} 
+curve(ff(x), add = T, col = 2)
+integrate(ff, lower = 0, upper = 3)
+intensity <- function(x) {
+  4.6 * ff(x)
+}
+integrate(intensity, lower = 0, upper =3)
+
+
+
+
+breaks <- seq(0, 3, length.out = 19)
+ss2 <- hist(aa$locations, breaks = breaks)
+observed_goals <- ss2$counts
+observed_goals
+
+integrate(ff, lower = 0.5, 5.5)$val
+expected_goals <- sapply(1:18, function(x) {
+  integrate(intensity, lower = breaks[x], upper = breaks[x + 1])$val
+}) * 400 
+expected_goals
+
+sum((observed_goals - expected_goals)^2/expected_goals)
+
+pchisq(11.08, df = 18 - 1 - 3, lower.tail = F)
+
+
+#We fail to reject because the p value is greater than 0.05
+
+```
+
+```{r}
+#PART E
+
+#According the graphs that were produced, I would 
+#choose the cubic polynomial since in the graph the
+#polynomial fits the graph better . 
+#Also in our goodness of fit test we failed to reject.
+```
+
